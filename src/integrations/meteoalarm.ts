@@ -77,37 +77,37 @@ export default class Meteoalarm implements MeteoalarmIntegration {
 		let event: MeteoalarmEventType | undefined;
 		let level: MeteoalarmLevelType | undefined;
 
-               let highestLevelIndex = 0;
-               if (awarenessLevel != undefined) {
-                       const parts = awarenessLevel.split(';');
-                       let highestLevelID: number | undefined;
+		let highestLevelIndex = 0;
+		if (awarenessLevel != undefined) {
+			const parts = awarenessLevel.split(';');
+			let highestLevelID: number | undefined;
 
-                       parts.forEach((part, idx) => {
-                               let levelID = Number(part.trim());
-                               if (Number.isNaN(levelID)) return;
-                               if (levelID == 1) {
-                                       // Fallback for https://github.com/MrBartusek/MeteoalarmCard/issues/49
-                                       levelID = 2;
-                               }
+			parts.forEach((part, idx) => {
+				let levelID = Number(part.trim());
+				if (Number.isNaN(levelID)) return;
+				if (levelID == 1) {
+					// Fallback for https://github.com/MrBartusek/MeteoalarmCard/issues/49
+					levelID = 2;
+				}
 
-                               if (highestLevelID === undefined || levelID > highestLevelID) {
-                                       highestLevelID = levelID;
-                                       highestLevelIndex = idx;
-                               }
-                       });
+				if (highestLevelID === undefined || levelID > highestLevelID) {
+					highestLevelID = levelID;
+					highestLevelIndex = idx;
+				}
+			});
 
-                       if (highestLevelID !== undefined) {
-                               level = (highestLevelID - 1) as MeteoalarmLevelType;
-                       }
-               }
+			if (highestLevelID !== undefined) {
+				level = (highestLevelID - 1) as MeteoalarmLevelType;
+			}
+		}
 
-               if (awarenessType != undefined) {
-                       const parts = awarenessType.split(';');
-                       const id = Number(parts[highestLevelIndex]?.trim() || parts[0]);
-                       if (!Number.isNaN(id)) {
-                               event = this.eventTypes[id - 1];
-                       }
-               }
+		if (awarenessType != undefined) {
+			const parts = awarenessType.split(';');
+			const id = Number(parts[highestLevelIndex]?.trim() || parts[0]);
+			if (!Number.isNaN(id)) {
+				event = this.eventTypes[id - 1];
+			}
+		}
 
 		if (level === undefined && severity !== undefined) {
 			level = Utils.getLevelBySeverity(severity);
